@@ -1,55 +1,96 @@
 .Contents {
-    width: 915px;
+  width: 915px;
 }
 
 .Contents-list {
-    display: inline-block;
-    width: 250px;
-    margin: 2%;
-    border-top-right-radius: 15px;
-    border: 2px solid #000000;
-    border-radius: 10px;
-    box-shadow: 2px 2px 2px 1px #D1D1D1;
+  display: inline-block;
+  width: 250px;
+  margin: 2%;
+  border-top-right-radius: 15px;
+  border: 2px solid #000000;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 1px #D1D1D1;
 }
 
 
 .Contents-title {
-    font-size: 35px;
+  display: inline-block;
+  font-size: 35px;
+  margin-left: 40px;
 }
 
 .Contents-Cards {
-    position: relative;
-    width: 92%;
-    min-height: 120px;
-    height: 120px;
-    margin: auto;
-    margin-bottom: 16px;
-    border: 2px solid #434242;
-    border-radius: 10px;
-    background-color: #FBFCFC;
-}
-
-.Cards-contents {
-    display: inline-block;
-    width: 85%;
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    transform: translateY(-50%);
+  position: relative;
+  width: 92%;
+  min-height: 120px;
+  height: 120px;
+  margin: auto;
+  margin-bottom: 16px;
+  border: 2px solid #434242;
+  border-radius: 10px;
+  background-color: #FBFCFC;
 }
 
 .Contents-Cards:hover .Cards-update-btn {
-    display: block;
+  display: block;
 }
 
 .Cards-modify-btn {
-    position: absolute;
-    bottom: 6px;
-    right: 6px;
-    opacity: 0.5;
-    font-size: 20px;
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  opacity: 0.5;
+  font-size: 20px;
 }
 
-.Cards-modify-btn a {
-    color: #000000;
+.Cards-modify-btn button, .Cards-cancel-btn, .Cards-save-btn {
+  border:0;
+  background-color: transparent;
+}
+
+.Cards-contents {
+  display: inline-block;
+  width: 85%;
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+}
+
+.Cards-textarea {
+  width: 188px;
+  min-height: 80px;
+  position: absolute;
+  top: 50%;
+  left: 2%;
+  transform: translateY(-50%);
+  text-align: center;
+  padding: 0;
+  background-color: #FBFCFC;
+}
+
+.Cards-cancel-btn {
+  float: left;
+  margin-top: px;
+  margin-left: -25px;
+}
+
+.Cards-save-btn {
+  float: left;
+  margin-top: 50px;
+  margin-left: -26px;
+}
+
+.dropdown {
+  margin: 10px;
+  float: right;
+}
+
+.dropdown button {
+  width: 36px;
+  height: 32px;
+}
+
+.hide {
+  display: none;
 }
