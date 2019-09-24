@@ -1,0 +1,21 @@
+.Mainpage {
+    text-align: center;
+    width: 915px;
+    padding-top: 50px;
+}
+
+.Mainpage-header {
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 50px;
+}
+
+.Mainpage-header-btn {
+    float: right;
+    margin: 20px 40px 0px -240px;
+}
+
+.Mainpage-header-btn button {
+    float: left;
+    margin-right: 10px;
+}

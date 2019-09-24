@@ -36,6 +36,7 @@ build/
 # dependencies
 src/main/webapp/node
 src/main/webapp/node_modules
+node_modules
 src/main/webapp/.pnp
 src/main/webapp/.pnp.js
 
@@ -55,3 +56,4 @@ src/main/webapp/.env.production.local
 src/main/webapp/npm-debug.log*
 src/main/webapp/yarn-debug.log*
 src/main/webapp/yarn-error.log*
+
