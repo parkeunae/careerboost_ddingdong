@@ -30,6 +30,8 @@ build/
 ### VS Code ###
 .vscode/
 
+**/application.properties
+
 
 ### react gitignore ###
 

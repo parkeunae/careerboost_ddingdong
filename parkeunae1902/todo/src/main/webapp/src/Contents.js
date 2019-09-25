@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import Checkbox from './Checkbox';
 import './Contents.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -39,8 +40,14 @@ class Contents extends Component {
 	}
 }
 
-//참고: https://stackoverflow.com/questions/45014094/expected-to-return-a-value-at-the-end-of-arrow-function
 class List extends Component {
+	componentDidMount() {
+		axios.get('/todolist')
+				.then(function(response) {
+					console.log(response);
+				})
+	}
+
 	render() {
 		const listType = this.props.title;
 		return (
@@ -157,7 +164,10 @@ class CardEdititor extends Component {
 		if(CreateBtn.getAttribute("disabled") === "disabled") {
 			CreateBtn.removeAttribute("disabled");
 		}
-    
+	}
+
+	saveContents = () => {
+		console.log(this);
 	}
 
 	render() {
@@ -180,7 +190,7 @@ class CardEdititor extends Component {
 														<Tooltip >저장</Tooltip>
 													}>
 						<button className="Cards-save-btn">
-							<FontAwesomeIcon icon={faCheckCircle} size="1x" ></FontAwesomeIcon>
+							<FontAwesomeIcon icon={faCheckCircle} size="1x" onClick={this.saveContents} ></FontAwesomeIcon>
 						</button>
 					</OverlayTrigger>
 				</div>
