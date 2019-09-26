@@ -1,17 +1,19 @@
 package kr.or.connect.todo.document;
 
-import org.springframework.data.annotation.Id;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "todo")
 public class Todo {
-  @Id
-  private int id;
+
+  @Indexed
+  private ObjectId id;
   private String type;
   private String contents;
   private String createDate;
 
-  public int getId() {
+  public ObjectId getId() {
     return id;
   }
 

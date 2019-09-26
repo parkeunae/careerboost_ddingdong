@@ -1,11 +1,13 @@
 package kr.or.connect.todo.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.connect.todo.document.Todo;
@@ -13,16 +15,19 @@ import kr.or.connect.todo.service.TodoService;
 
 
 @RestController
+@RequestMapping("/api")
 public class TodoController {
   @Autowired
   private TodoService todoService;
   
-  @GetMapping("/todolist")
-  public Map<String, Object> getTodoList() {
-    List<Todo> todoList = todoService.getTodoList();
+  @GetMapping("/todolist/{type}")
+  public List<Todo> getTodoListByType(@PathVariable(name = "type") String type) {
+    return todoService.getTodoListByType(type);
+  }
 
-    Map<String, Object> map = new HashMap<>();
-    map.put("todoList", todoList);
-    return map;
+  @PostMapping("/todolist")
+  public Todo setTodo(@RequestBody Todo todo) {
+    System.out.println("todo = "+todo);
+    return todoService.setTodo(todo);
   }
 }

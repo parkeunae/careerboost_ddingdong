@@ -6,7 +6,7 @@ import kr.or.connect.todo.document.Todo;
 
 public interface TodoService {
 
-  public List<Todo> getTodoList();
+  public List<Todo> getTodoListByType(String type);
 
   public Todo setTodo(Todo todo);
 

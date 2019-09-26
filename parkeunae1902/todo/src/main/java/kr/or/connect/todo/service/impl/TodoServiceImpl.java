@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,10 @@ public class TodoServiceImpl implements TodoService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<Todo> getTodoList() {
+  public List<Todo> getTodoListByType(String type) {
     Query query = new Query()
-                  .with(Sort.by(Sort.Order.asc("create_date")));
+                  .addCriteria(Criteria.where("type").is(type))
+                  .with(Sort.by(Sort.Order.asc("createDate")));
 
     return mongoTemplate.find(query, Todo.class);
   }

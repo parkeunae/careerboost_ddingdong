@@ -23,8 +23,8 @@ class Checkbox extends Component {
     render() {
         return (
             <div className="Cards-checkbox">
-                <input type="checkbox" id={this.props.id} defaultChecked={this.state.isChecked} onChange={this.toggleCheckbox} />
-                <label htmlFor={this.props.id}>
+                <input type="checkbox" id={this.props.cssid} defaultChecked={this.state.isChecked} onChange={this.toggleCheckbox} />
+                <label htmlFor={this.props.cssid}>
                     <FontAwesomeIcon icon={this.state.checkboxIcon} size="1x"></FontAwesomeIcon>
                 </label>
                 

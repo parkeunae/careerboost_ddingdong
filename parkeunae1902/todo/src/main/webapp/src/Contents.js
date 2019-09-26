@@ -12,6 +12,8 @@ const types = [
 	"Done"
 ]
 
+let cardIndex = 0;
+
 class Contents extends Component {
 	render() {
 		return (
@@ -34,12 +36,18 @@ class List extends Component {
 		}
 
 		this.renderDatas = this.renderDatas.bind(this);
+		this.getTodolist = this.getTodolist.bind(this);
 	}
 
 	componentDidMount() {
-		axios.get('/todolist')
+		this.getTodolist();
+	}
+
+	getTodolist() {
+		const type = this.props.title;
+		axios.get('api/todolist/'+type.toLowerCase())
 				.then(response => {
-					this.setState({datas: response.data.todoList});
+					this.setState({datas: response.data});
 				})
 				.catch(error => {
 					console.log(error);
@@ -48,12 +56,13 @@ class List extends Component {
 
 	renderDatas(listType) {
 		listType = listType.toLowerCase();
+		const cardClassName = "Contents-Cards"
 		return(
 			this.state.datas.filter(data => data.type === listType)
 			.map((data, index) => {
-				return <Cards contents={data.contents} id={data.type+index} type={data.type} key={index}></Cards>
+				cardIndex = index;
+				return <Cards contents={data.contents} cssid={data.type+index} id={data.id} type={data.type} key={index} cssclass={cardClassName}></Cards>
 			})
-			
 		)
 	}
 
@@ -122,19 +131,21 @@ class Cards extends Component {
 
 	render() {
 		return (
-			<div className="Contents-Cards" id={this.props.id+'card'}>
+			
+			<div className={this.props.cssclass} id={this.props.cssid+'card'}>
 				{
 					this.state.isComplete === true ?
 					<div>
-					<Checkbox id={this.props.id} />
-					<div className="Cards-contents">
-						<p>{this.props.contents}</p>
-					</div></div> 
+						<Checkbox cssid={this.props.cssid} />
+						<div className="Cards-contents">
+							<p>{this.props.contents}</p>
+						</div>
+					</div> 
 					: 
-					<CardEdititor id={this.props.id} value={this.props.contents} changeCompleteState={this.changeCompleteState}></CardEdititor>
+					<CardEdititor id={this.props.id} value={this.props.contents} changeCompleteState={this.changeCompleteState} type={this.props.type}></CardEdititor>
 				}
 				{
-					this.props.type === 'Todo' && this.state.isComplete === true ?
+					this.props.type === 'todo' && this.state.isComplete === true ?
 					<div className="Cards-modify-btn">
 						<OverlayTrigger placement="bottom" 
 														overlay={
@@ -152,7 +163,43 @@ class Cards extends Component {
 	}
 }
 
+
 class CardEdititor extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			id: '',
+			value: '',
+			save: false
+		}
+
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleChange(event) {
+		this.setState({value: event.target.value});
+	}
+
+	handleSubmit() {
+		axios.post('api/todolist', {
+			contents: this.state.value
+		})
+		.then(response => {
+			this.changeCreateBtnDisable();
+
+			this.setState(
+				{
+					save:true,
+					id: response.data.id
+				}
+			);
+		})
+		.catch(error => {
+			console.log(error);
+		})
+	}
 	
 	resizeCardEditor() {
 		const textArea = document.querySelector(".Cards-textarea");
@@ -167,20 +214,21 @@ class CardEdititor extends Component {
 		const cardCreated = document.querySelector(".Card-created");
 		cardCreated.parentElement.lastElementChild.remove();
 
+		this.changeCreateBtnDisable();		
+	}
+
+	changeCreateBtnDisable() {
 		const CreateBtn = document.querySelector("#create-card");
 		if(CreateBtn.getAttribute("disabled") === "disabled") {
 			CreateBtn.removeAttribute("disabled");
 		}
 	}
 
-	saveContents = () => {
-		console.log(this);
-	}
-
 	render() {
 		return (
-			<div className="Cards-contents">
-				<div>
+			<div >
+				{!this.state.save ? 
+				<div className="Cards-contents">
 					<OverlayTrigger placement="left" 
 													overlay={
 														<Tooltip >취소</Tooltip>
@@ -189,20 +237,25 @@ class CardEdititor extends Component {
 							<FontAwesomeIcon icon={faTimesCircle} size="1x" ></FontAwesomeIcon>
 						</button>
 					</OverlayTrigger>
-				</div>
 
-				<div>
 					<OverlayTrigger placement="left" 
 													overlay={
 														<Tooltip >저장</Tooltip>
 													}>
-						<button className="Cards-save-btn">
-							<FontAwesomeIcon icon={faCheckCircle} size="1x" onClick={this.saveContents} ></FontAwesomeIcon>
+						<button className="Cards-save-btn" onClick={this.handleSubmit}>
+							<FontAwesomeIcon icon={faCheckCircle} size="1x"></FontAwesomeIcon>
 						</button>
 					</OverlayTrigger>
-				</div>
 				
-				<textarea className="Cards-textarea" placeholder="일정을 입력해주세요!" onKeyDown={this.resizeCardEditor} defaultValue={this.props.value}></textarea>
+				<textarea className="Cards-textarea" placeholder="일정을 입력해주세요!" onKeyDown={this.resizeCardEditor} defaultValue={this.props.value} onChange={this.handleChange}></textarea>
+				</div>
+
+				:
+
+				<Cards cssclass={""} contents={this.state.value} cssid={"todo"+(cardIndex+1)} id={this.state.id} type={"todo"}></Cards>
+
+				}
+				
 			</div>
 		)
 	}
