@@ -12,21 +12,6 @@ const types = [
 	"Done"
 ]
 
-const datas = [
-	{
-		type: "Todo",
-		contents: "앞으로 할 일"
-	},
-	{
-		type: "Todo",
-		contents: "앞으로 할 일"
-	},
-	{
-		type: "Done",
-		contents: "다 끝낸 일"
-	}
-]
-
 class Contents extends Component {
 	render() {
 		return (
@@ -41,11 +26,35 @@ class Contents extends Component {
 }
 
 class List extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			datas: []
+		}
+
+		this.renderDatas = this.renderDatas.bind(this);
+	}
+
 	componentDidMount() {
 		axios.get('/todolist')
-				.then(function(response) {
-					console.log(response);
+				.then(response => {
+					this.setState({datas: response.data.todoList});
 				})
+				.catch(error => {
+					console.log(error);
+				})
+	}
+
+	renderDatas(listType) {
+		listType = listType.toLowerCase();
+		return(
+			this.state.datas.filter(data => data.type === listType)
+			.map((data, index) => {
+				return <Cards contents={data.contents} id={data.type+index} type={data.type} key={index}></Cards>
+			})
+			
+		)
 	}
 
 	render() {
@@ -53,13 +62,11 @@ class List extends Component {
 		return (
 			<section className="Contents-list" id={listType+'-list-id'}>
 				<Subject title={this.props.title}></Subject>
-				{datas.filter(data => data.type === listType)
-					.map((data, index) => {
-						return <Cards contents={data.contents} id={data.type+index} type={data.type} key={index}></Cards>
-					})}
+				{this.renderDatas(listType)}
 			</section>
 		)
 	}
+	
 }
 
 class Subject extends Component {
