@@ -12,6 +12,8 @@ const types = [
 	"Done"
 ]
 
+let todoIndex = 0;
+
 class Contents extends Component {
 	render() {
 		return (
@@ -42,10 +44,14 @@ class List extends Component {
 	}
 
 	getTodolist() {
-		const type = this.props.title;
-		axios.get('api/todolist/'+type.toLowerCase())
+		const type = this.props.title.toLowerCase();
+		axios.get('api/todolist/'+type)
 				.then(response => {
 					this.setState({datas: response.data});
+					if(type === "todo") {
+						todoIndex = response.data.length - 1;
+					}
+					
 				})
 				.catch(error => {
 					console.log(error);
@@ -58,7 +64,7 @@ class List extends Component {
 		return(
 			this.state.datas.filter(data => data.type === listType)
 			.map((data, index) => {
-				return <Cards contents={data.contents} id={data.id} type={data.type} key={index} cssclass={cardClassName}></Cards>
+				return <Cards contents={data.contents} id={data.id} type={data.type} key={index} cssclass={cardClassName} index={data.type + index}></Cards>
 			})
 		)
 	}
@@ -133,7 +139,7 @@ class Cards extends Component {
 				{
 					this.state.isComplete === true ?
 					<div>
-						<Checkbox id={this.props.id} />
+						<Checkbox index={this.props.index} id={this.props.id} />
 						<div className="Cards-contents">
 							<p>{this.props.contents}</p>
 						</div>
@@ -262,7 +268,7 @@ class CardEdititor extends Component {
 
 				:
 
-				<Cards cssclass={""} contents={this.state.value} id={this.state.id} type={"todo"}></Cards>
+				<Cards cssclass={""} contents={this.state.value} id={this.state.id} type={"todo"} index={"todo"+(++todoIndex)}></Cards>
 
 				}
 				

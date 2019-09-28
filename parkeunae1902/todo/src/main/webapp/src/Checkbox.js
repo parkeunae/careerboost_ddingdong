@@ -10,7 +10,8 @@ class Checkbox extends Component {
         checkboxIcon: faSquare
     }
 
-    toggleCheckbox = () => {
+    toggleCheckbox(id) {
+        console.log(id);
         this.setState(()=>(
                 {
                     isChecked: !this.state.isChecked,
@@ -23,8 +24,8 @@ class Checkbox extends Component {
     render() {
         return (
             <div className="Cards-checkbox">
-                <input type="checkbox" id={this.props.id+'checkbox'} defaultChecked={this.state.isChecked} onChange={this.toggleCheckbox} value={this.props.id} />
-                <label htmlFor={this.props.id+'checkbox'}>
+                <input type="checkbox" id={this.props.index} defaultChecked={this.state.isChecked} onChange={() => this.toggleCheckbox(this.props.id)} />
+                <label htmlFor={this.props.index}>
                     <FontAwesomeIcon icon={this.state.checkboxIcon} size="1x"></FontAwesomeIcon>
                 </label>
             </div>
