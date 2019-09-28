@@ -12,8 +12,6 @@ const types = [
 	"Done"
 ]
 
-let cardIndex = 0;
-
 class Contents extends Component {
 	render() {
 		return (
@@ -60,8 +58,7 @@ class List extends Component {
 		return(
 			this.state.datas.filter(data => data.type === listType)
 			.map((data, index) => {
-				cardIndex = index;
-				return <Cards contents={data.contents} cssid={data.type+index} id={data.id} type={data.type} key={index} cssclass={cardClassName}></Cards>
+				return <Cards contents={data.contents} id={data.id} type={data.type} key={index} cssclass={cardClassName}></Cards>
 			})
 		)
 	}
@@ -132,11 +129,11 @@ class Cards extends Component {
 	render() {
 		return (
 			
-			<div className={this.props.cssclass} id={this.props.cssid+'card'}>
+			<div className={this.props.cssclass}>
 				{
 					this.state.isComplete === true ?
 					<div>
-						<Checkbox cssid={this.props.cssid} />
+						<Checkbox id={this.props.id} />
 						<div className="Cards-contents">
 							<p>{this.props.contents}</p>
 						</div>
@@ -176,6 +173,7 @@ class CardEdititor extends Component {
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleUpdate = this.handleUpdate.bind(this);
 	}
 
 	handleChange(event) {
@@ -191,10 +189,28 @@ class CardEdititor extends Component {
 
 			this.setState(
 				{
-					save:true,
+					save: true,
 					id: response.data.id
 				}
 			);
+		})
+		.catch(error => {
+			console.log(error);
+		})
+	}
+
+	handleUpdate() {
+		axios.put('api/todolist', {
+			id: this.props.id,
+			contents: this.state.value
+		})
+		.then(response => {
+			this.setState(
+				{
+					save: true,
+					id: response.data.id
+				}
+			)
 		})
 		.catch(error => {
 			console.log(error);
@@ -210,7 +226,7 @@ class CardEdititor extends Component {
 		}
 	}
 
-	cancelRegisterCard = (e) => {
+	cancelRegisterCard = () => {
 		const cardCreated = document.querySelector(".Card-created");
 		cardCreated.parentElement.lastElementChild.remove();
 
@@ -229,20 +245,14 @@ class CardEdititor extends Component {
 			<div >
 				{!this.state.save ? 
 				<div className="Cards-contents">
-					<OverlayTrigger placement="left" 
-													overlay={
-														<Tooltip >취소</Tooltip>
-													}>
-						<button className="Cards-cancel-btn" onClick={this.props.value === "" ? this.cancelRegisterCard : this.props.changeCompleteState}>
+					<OverlayTrigger placement="left" overlay={<Tooltip >취소</Tooltip>}>
+						<button className="Cards-cancel-btn" onClick={this.props.value ? this.props.changeCompleteState : this.cancelRegisterCard}>
 							<FontAwesomeIcon icon={faTimesCircle} size="1x" ></FontAwesomeIcon>
 						</button>
 					</OverlayTrigger>
 
-					<OverlayTrigger placement="left" 
-													overlay={
-														<Tooltip >저장</Tooltip>
-													}>
-						<button className="Cards-save-btn" onClick={this.handleSubmit}>
+					<OverlayTrigger placement="left"	overlay={<Tooltip >저장</Tooltip>}>
+						<button className="Cards-save-btn" onClick={this.props.changeCompleteState ? this.handleUpdate : this.handleSubmit}>
 							<FontAwesomeIcon icon={faCheckCircle} size="1x"></FontAwesomeIcon>
 						</button>
 					</OverlayTrigger>
@@ -252,7 +262,7 @@ class CardEdititor extends Component {
 
 				:
 
-				<Cards cssclass={""} contents={this.state.value} cssid={"todo"+(cardIndex+1)} id={this.state.id} type={"todo"}></Cards>
+				<Cards cssclass={""} contents={this.state.value} id={this.state.id} type={"todo"}></Cards>
 
 				}
 				

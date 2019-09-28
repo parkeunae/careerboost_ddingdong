@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +46,16 @@ public class TodoServiceImpl implements TodoService {
     todo.setCreateDate(stringDate);
 
     return mongoTemplate.insert(todo);
+  }
+
+  @Override
+  @Transactional
+  public Todo modifyTodo(ObjectId id, String contents) {
+    Query query = new Query().addCriteria(Criteria.where("_id").is(id));
+    Update update = new Update();
+    update.set("contents", contents);
+
+    return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), Todo.class);
   }
 
   
