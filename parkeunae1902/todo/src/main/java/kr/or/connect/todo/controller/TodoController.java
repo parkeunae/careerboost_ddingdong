@@ -36,4 +36,9 @@ public class TodoController {
   public Todo modifyTodo(@RequestBody Todo todo) {
     return todoService.modifyTodo(todo.getId(), todo.getContents());
   }
+
+  @PutMapping("/type")
+  public Todo modifyTypes(@RequestBody Todo todo) {
+    return todoService.modifyTypes(todo);
+  }
 }

@@ -1,36 +1,64 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
+import axios from 'axios';
+import $ from 'jquery';
+import {Cards} from './Contents';
 import './Checkbox.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquare, faCheckSquare } from '@fortawesome/free-regular-svg-icons';
+import { Dropdown } from 'react-bootstrap';
 
 //참고: https://codepen.io/dsabalete/pen/jAzLpA
 class Checkbox extends Component {
-    state = {
-        isChecked: false,
-        checkboxIcon: faSquare
-    }
 
-    toggleCheckbox(id) {
-        console.log(id);
-        this.setState(()=>(
-                {
-                    isChecked: !this.state.isChecked,
-                    checkboxIcon: this.state.checkboxIcon === faCheckSquare ? faSquare : faCheckSquare
-                }
-            )
-        );
-    }
+  moveToDoing = (newType) => {
+  axios.put('api/type', {
+    id: this.props.id,
+    type: newType
+  })
+  .then(response => {
+    const data = response.data;
+    const type = data.type.replace(/\b[a-z]/, (first) => {
+        return first.toUpperCase();
+    })
 
-    render() {
-        return (
-            <div className="Cards-checkbox">
-                <input type="checkbox" id={this.props.index} defaultChecked={this.state.isChecked} onChange={() => this.toggleCheckbox(this.props.id)} />
-                <label htmlFor={this.props.index}>
-                    <FontAwesomeIcon icon={this.state.checkboxIcon} size="1x"></FontAwesomeIcon>
-                </label>
-            </div>
-        )
+    const list = document.querySelector('#'+type+'-list-id');
+    const elementCreated = document.createElement('div');
+    list.appendChild(elementCreated);
+
+    ReactDOM.render(<Cards contents={data.contents} id={data.id} type={data.type} cssclass={"Contents-Cards"} index={this.props.index}></Cards>, elementCreated);
+    
+    if($('#'+this.props.index+'card').parent().is('.Contents-Cards') === true) {
+      $('#'+this.props.index+'card').parent().remove();
+    } else {
+      $('#'+this.props.index+'card').remove();
     }
+    
+  })
+  .catch(error => {
+    console.log(error);
+  })
+}
+
+  render() {
+    return (
+      <div className="Cards-checkbox">
+        
+        <Dropdown id={this.props.type+'Select'} >
+          <Dropdown.Toggle variant="warning" id="dropdown-variants-warning">
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {
+              this.props.type === 'todo' && 
+              <Dropdown.Item href="" onClick={() => this.moveToDoing('doing')}>Doing</Dropdown.Item>
+            }
+            {
+              this.props.type === 'doing' && 
+              <Dropdown.Item href="" onClick={() => this.moveToDoing('done')}>Done</Dropdown.Item>
+            }
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+    )
+  }
 }
 
 export default Checkbox;

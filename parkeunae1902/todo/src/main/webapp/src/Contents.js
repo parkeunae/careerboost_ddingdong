@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import axios from 'axios';
+import $ from 'jquery';
 import Checkbox from './Checkbox';
 import './Contents.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,13 +15,15 @@ const types = [
 ]
 
 let todoIndex = 0;
+let doingIndex = 0;
+let doneIndex = 0;
 
 class Contents extends Component {
 	render() {
 		return (
 			<article className="Contents">
 				{types.map((type, index) => {
-					return <List title={type} key={index}></List>
+					return <List title={type} key={index} ></List>
 				})}
 				
 			</article>
@@ -50,6 +54,10 @@ class List extends Component {
 					this.setState({datas: response.data});
 					if(type === "todo") {
 						todoIndex = response.data.length - 1;
+					} else if(type === "doing") {
+						doingIndex = response.data.length - 1;
+					} else if(type === "done") {
+						doneIndex = response.data.length - 1;
 					}
 					
 				})
@@ -64,16 +72,18 @@ class List extends Component {
 		return(
 			this.state.datas.filter(data => data.type === listType)
 			.map((data, index) => {
-				return <Cards contents={data.contents} id={data.id} type={data.type} key={index} cssclass={cardClassName} index={data.type + index}></Cards>
+				return <Cards contents={data.contents} id={data.id} type={data.type} key={index} cssclass={cardClassName} index={data.type + index} ></Cards>
 			})
 		)
 	}
+
+	
 
 	render() {
 		const listType = this.props.title;
 		return (
 			<section className="Contents-list" id={listType+'-list-id'}>
-				<Subject title={this.props.title}></Subject>
+				<Subject title={this.props.title} ></Subject>
 				{this.renderDatas(listType)}
 			</section>
 		)
@@ -82,33 +92,15 @@ class List extends Component {
 }
 
 class Subject extends Component {
+
+
 	render() {
+		
 		return (
 			<div>
 				<h3 className="Contents-title">
 					{this.props.title}
 				</h3>
-				<label htmlFor={this.props.title+'Select'}>
-					
-				</label>
-				<Dropdown id={this.props.title+'Select'}>
-					<Dropdown.Toggle variant="warning" id="dropdown-variants-warning">
-					</Dropdown.Toggle>
-					<Dropdown.Menu>
-						{
-							!(this.props.title === 'Todo') && 
-							<Dropdown.Item href="">Todo</Dropdown.Item>
-						}
-						{
-							!(this.props.title === 'Doing') && 
-							<Dropdown.Item href="">Doing</Dropdown.Item>
-						}
-						{
-							!(this.props.title === 'Done') && 
-							<Dropdown.Item href="">Done</Dropdown.Item>
-						}	
-					</Dropdown.Menu>
-				</Dropdown>
 			</div>
 		)
 	}
@@ -135,17 +127,24 @@ class Cards extends Component {
 	render() {
 		return (
 			
-			<div className={this.props.cssclass}>
+			<div className={this.props.cssclass} id={this.props.index+"card"}>
 				{
-					this.state.isComplete === true ?
+					(this.state.isComplete === true) ?
+					(this.props.type !== "done") ?
 					<div>
-						<Checkbox index={this.props.index} id={this.props.id} />
+						<Checkbox index={this.props.index} id={this.props.id} type={this.props.type} index={this.props.index} />
 						<div className="Cards-contents">
 							<p>{this.props.contents}</p>
 						</div>
-					</div> 
+					</div>
+					:
+					<div>
+						<div className="Cards-contents">
+							<p>{this.props.contents}</p>
+						</div>
+					</div>
 					: 
-					<CardEdititor id={this.props.id} value={this.props.contents} changeCompleteState={this.changeCompleteState} type={this.props.type}></CardEdititor>
+					<CardEdititor id={this.props.id} value={this.props.contents} changeCompleteState={this.changeCompleteState} type={this.props.type} index={this.props.index} ></CardEdititor>
 				}
 				{
 					this.props.type === 'todo' && this.state.isComplete === true ?
@@ -199,6 +198,8 @@ class CardEdititor extends Component {
 					id: response.data.id
 				}
 			);
+
+			
 		})
 		.catch(error => {
 			console.log(error);
@@ -217,6 +218,10 @@ class CardEdititor extends Component {
 					id: response.data.id
 				}
 			)
+			const index = this.props.index;
+			if($("#"+index).parent().is(".Card-created") === true) {
+				$("#"+index).remove();
+			}
 		})
 		.catch(error => {
 			console.log(error);
@@ -248,8 +253,7 @@ class CardEdititor extends Component {
 
 	render() {
 		return (
-			<div >
-				{!this.state.save ? 
+				!this.state.save ? 
 				<div className="Cards-contents">
 					<OverlayTrigger placement="left" overlay={<Tooltip >취소</Tooltip>}>
 						<button className="Cards-cancel-btn" onClick={this.props.value ? this.props.changeCompleteState : this.cancelRegisterCard}>
@@ -263,20 +267,17 @@ class CardEdititor extends Component {
 						</button>
 					</OverlayTrigger>
 				
-				<textarea className="Cards-textarea" placeholder="일정을 입력해주세요!" onKeyDown={this.resizeCardEditor} defaultValue={this.props.value} onChange={this.handleChange}></textarea>
+					<textarea className="Cards-textarea" placeholder="일정을 입력해주세요!" onKeyDown={this.resizeCardEditor} defaultValue={this.props.value} onChange={this.handleChange}></textarea>
 				</div>
 
 				:
 
-				<Cards cssclass={""} contents={this.state.value} id={this.state.id} type={"todo"} index={"todo"+(++todoIndex)}></Cards>
-
-				}
+				<Cards cssclass={""} contents={this.state.value} id={this.state.id} type={"todo"} index={this.props.index ? this.props.index : "todo"+(++todoIndex)}></Cards>
 				
-			</div>
 		)
 	}
 }
 
 
 export default Contents;
-export {CardEdititor};
+export {CardEdititor, Cards};

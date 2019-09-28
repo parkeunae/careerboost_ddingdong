@@ -58,5 +58,15 @@ public class TodoServiceImpl implements TodoService {
     return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), Todo.class);
   }
 
+  @Override
+  @Transactional
+  public Todo modifyTypes(Todo todo) {
+    Query query = new Query().addCriteria(Criteria.where("_id").is(todo.getId()));
+    Update update = new Update();
+    update.set("type", todo.getType());
+
+    return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), Todo.class);
+  }
+
   
 }

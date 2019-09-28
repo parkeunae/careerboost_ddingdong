@@ -7,6 +7,10 @@ import { faCheckSquare } from '@fortawesome/free-regular-svg-icons';
 import { Button } from 'react-bootstrap';
 
 class Header extends Component {
+  state = {
+    selected : []
+  }
+
   createCard = () => {
     const todolist = document.querySelector('#Todo-list-id');
     const elementCreated = document.createElement('div');
@@ -17,6 +21,8 @@ class Header extends Component {
 
     const CreateBtn = document.querySelector("#create-card");
     CreateBtn.setAttribute("disabled", "disabled");
+
+    return elementCreated;
   }
 
 	render() {
@@ -26,7 +32,6 @@ class Header extends Component {
         <h1 className="Mainpage-header">{this.props.title}</h1>
         <div className="Mainpage-header-btn">
           <Button id="create-card" variant="warning" onClick={this.createCard}>일정 추가</Button>
-          <Button id="delete-card" variant="light">일정 삭제</Button>
         </div>
 			</header>
 		)
@@ -34,11 +39,12 @@ class Header extends Component {
 }
 
 class Mainpage extends Component {
+  
   render() {
     return (
       <div className="Mainpage">
         <Header title="Todo list"></Header>
-		    <Contents></Contents>		
+		    <Contents></Contents>
       </div>
     )
   }

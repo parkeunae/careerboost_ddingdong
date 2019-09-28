@@ -16,7 +16,6 @@
 .Contents-title {
   display: inline-block;
   font-size: 35px;
-  margin-left: 40px;
 }
 
 .Contents-Cards {
@@ -50,11 +49,12 @@
 
 .Cards-contents {
   display: inline-block;
-  width: 85%;
+  width: 65%;
   position: absolute;
   top: 50%;
-  left: 10%;
+  left: 5%;
   transform: translateY(-50%);
+  margin-left: 30px;
 }
 
 .Cards-textarea {
@@ -62,23 +62,23 @@
   min-height: 80px;
   position: absolute;
   top: 50%;
-  left: 2%;
+  left: 0;
   transform: translateY(-50%);
   text-align: center;
   padding: 0;
   background-color: #FBFCFC;
+  margin-left: -18px;
 }
 
 .Cards-cancel-btn {
   float: left;
-  margin-top: px;
-  margin-left: -25px;
+  margin-left: -45px;
 }
 
 .Cards-save-btn {
   float: left;
   margin-top: 50px;
-  margin-left: -26px;
+  margin-left: -45px;
 }
 
 .dropdown {
