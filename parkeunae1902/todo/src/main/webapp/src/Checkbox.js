@@ -38,24 +38,24 @@ class Checkbox extends Component {
   })
 }
 
-  render() {
-    return (
-      <div className="Cards-checkbox">
-        
-        <Dropdown id={this.props.type+'Select'} >
-          <Dropdown.Toggle variant="warning" id="dropdown-variants-warning">
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            {
-              this.props.type === 'todo' && 
-              <Dropdown.Item href="" onClick={() => this.moveToDoing('doing')}>Doing</Dropdown.Item>
-            }
-            {
-              this.props.type === 'doing' && 
-              <Dropdown.Item href="" onClick={() => this.moveToDoing('done')}>Done</Dropdown.Item>
-            }
-          </Dropdown.Menu>
-        </Dropdown>
+render() {
+   return (
+     <div className="Cards-checkbox">
+       
+      <Dropdown id={this.props.type+'Select'} >
+        <Dropdown.Toggle variant="warning" id="dropdown-variants-warning">
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          {
+            this.props.type === 'todo' && 
+            <Dropdown.Item href="" onClick={() => this.moveToDoing('doing')}>Doing</Dropdown.Item>
+          }
+          {
+            this.props.type === 'doing' && 
+            <Dropdown.Item href="" onClick={() => this.moveToDoing('done')}>Done</Dropdown.Item>
+          }
+        </Dropdown.Menu>
+      </Dropdown>
       </div>
     )
   }

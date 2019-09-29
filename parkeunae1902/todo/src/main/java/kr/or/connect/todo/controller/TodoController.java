@@ -3,6 +3,7 @@ package kr.or.connect.todo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,11 @@ public class TodoController {
   @PutMapping("/todolist")
   public Todo modifyTodo(@RequestBody Todo todo) {
     return todoService.modifyTodo(todo.getId(), todo.getContents());
+  }
+  
+  @DeleteMapping("/todolist")
+  public void deleteTodo(@RequestBody Todo todo) {
+    todoService.deleteTodo(todo);
   }
 
   @PutMapping("/type")

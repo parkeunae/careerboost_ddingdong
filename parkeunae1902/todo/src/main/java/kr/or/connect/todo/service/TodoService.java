@@ -14,6 +14,8 @@ public interface TodoService {
 
   public Todo modifyTodo(ObjectId id, String contents);
 
+  public void deleteTodo(Todo todo);
+
   public Todo modifyTypes(Todo todo);
 
 }

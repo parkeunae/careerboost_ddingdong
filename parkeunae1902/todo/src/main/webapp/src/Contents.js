@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 import $ from 'jquery';
 import Checkbox from './Checkbox';
 import './Contents.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTimesCircle, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
-import { OverlayTrigger, Tooltip, Dropdown } from 'react-bootstrap';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const types = [
 	"Todo",
@@ -15,8 +15,6 @@ const types = [
 ]
 
 let todoIndex = 0;
-let doingIndex = 0;
-let doneIndex = 0;
 
 class Contents extends Component {
 	render() {
@@ -54,11 +52,7 @@ class List extends Component {
 					this.setState({datas: response.data});
 					if(type === "todo") {
 						todoIndex = response.data.length - 1;
-					} else if(type === "doing") {
-						doingIndex = response.data.length - 1;
-					} else if(type === "done") {
-						doneIndex = response.data.length - 1;
-					}
+					} 
 					
 				})
 				.catch(error => {
@@ -124,6 +118,22 @@ class Cards extends Component {
 		this.setState({isComplete: false});
 	}
 
+	deleteCard = () => {
+		axios.delete('api/todolist', {
+			data: {id: this.props.id}
+		})
+		.then(() => {
+			if($('#'+this.props.index+'card').parent().is('.Contents-Cards') === true) {
+				$('#'+this.props.index+'card').parent().remove();
+			} else {
+				$('#'+this.props.index+'card').remove();
+			}
+		})
+		.catch(error => {
+			console.log(error);
+		})
+	}
+
 	render() {
 		return (
 			
@@ -132,9 +142,14 @@ class Cards extends Component {
 					(this.state.isComplete === true) ?
 					(this.props.type !== "done") ?
 					<div>
-						<Checkbox index={this.props.index} id={this.props.id} type={this.props.type} index={this.props.index} />
+						<Checkbox index={this.props.index} id={this.props.id} type={this.props.type} />
 						<div className="Cards-contents">
 							<p>{this.props.contents}</p>
+						</div>
+						<div className="Cards-delete-btn">
+							<button onClick={this.deleteCard}>
+								<FontAwesomeIcon icon={faTimes} size="1x" ></FontAwesomeIcon>
+							</button>
 						</div>
 					</div>
 					:
@@ -142,10 +157,16 @@ class Cards extends Component {
 						<div className="Cards-contents">
 							<p>{this.props.contents}</p>
 						</div>
+						<div className="Cards-delete-btn">
+							<button onClick={this.deleteCard}>
+								<FontAwesomeIcon icon={faTimes} size="1x" ></FontAwesomeIcon>
+							</button>
+						</div>
 					</div>
 					: 
 					<CardEdititor id={this.props.id} value={this.props.contents} changeCompleteState={this.changeCompleteState} type={this.props.type} index={this.props.index} ></CardEdititor>
 				}
+				
 				{
 					this.props.type === 'todo' && this.state.isComplete === true ?
 					<div className="Cards-modify-btn">
@@ -207,6 +228,9 @@ class CardEdititor extends Component {
 	}
 
 	handleUpdate() {
+		if(this.state.value === '') {
+			this.setState({value: this.props.value});
+		}
 		axios.put('api/todolist', {
 			id: this.props.id,
 			contents: this.state.value

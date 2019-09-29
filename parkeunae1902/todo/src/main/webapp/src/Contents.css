@@ -42,9 +42,13 @@
   font-size: 20px;
 }
 
-.Cards-modify-btn button, .Cards-cancel-btn, .Cards-save-btn {
+.Cards-modify-btn button, .Cards-cancel-btn, .Cards-save-btn, .Cards-delete-btn button {
   border:0;
   background-color: transparent;
+}
+
+.Cards-delete-btn {
+  float: right;
 }
 
 .Cards-contents {

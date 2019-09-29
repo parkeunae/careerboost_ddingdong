@@ -60,6 +60,12 @@ public class TodoServiceImpl implements TodoService {
 
   @Override
   @Transactional
+  public void deleteTodo(Todo todo) {
+    mongoTemplate.remove(todo);
+  }
+
+  @Override
+  @Transactional
   public Todo modifyTypes(Todo todo) {
     Query query = new Query().addCriteria(Criteria.where("_id").is(todo.getId()));
     Update update = new Update();
