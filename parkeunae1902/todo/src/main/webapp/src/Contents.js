@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import $ from 'jquery';
-import Checkbox from './Checkbox';
+import ChangeType from './ChangeType';
 import './Contents.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTimesCircle, faCheckCircle } from '@fortawesome/free-regular-svg-icons';
@@ -142,8 +142,8 @@ class Cards extends Component {
 					(this.state.isComplete === true) ?
 					(this.props.type !== "done") ?
 					<div>
-						<Checkbox index={this.props.index} id={this.props.id} type={this.props.type} />
-						<div className="Cards-contents">
+						<ChangeType index={this.props.index} id={this.props.id} type={this.props.type} />
+						<div className="Cards-contents" id={this.props.index+"contents"}>
 							<p>{this.props.contents}</p>
 						</div>
 						<div className="Cards-delete-btn">
@@ -207,24 +207,27 @@ class CardEdititor extends Component {
 	}
 
 	handleSubmit() {
-		axios.post('api/todolist', {
-			contents: this.state.value
-		})
-		.then(response => {
-			this.changeCreateBtnDisable();
-
-			this.setState(
-				{
-					save: true,
-					id: response.data.id
-				}
-			);
-
-			
-		})
-		.catch(error => {
-			console.log(error);
-		})
+		if(this.state.value === ""){
+			alert("일정을 입력해주세요");
+		} else {
+			axios.post('api/todolist', {
+				contents: this.state.value
+			})
+			.then(response => {
+				this.changeCreateBtnDisable();
+	
+				this.setState(
+					{
+						save: true,
+						id: response.data.id
+					}
+				);
+			})
+			.catch(error => {
+				console.log(error);
+			})
+		}
+		
 	}
 
 	handleUpdate() {
@@ -251,28 +254,15 @@ class CardEdititor extends Component {
 			console.log(error);
 		})
 	}
-	
-	resizeCardEditor() {
-		const textArea = document.querySelector(".Cards-textarea");
-		const textHeight = textArea.style.height;
-
-		if(textArea.scrollHeight > textHeight) {
-			textArea.style.height = textArea.scrollHeight + 'px';
-		}
-	}
 
 	cancelRegisterCard = () => {
-		const cardCreated = document.querySelector(".Card-created");
-		cardCreated.parentElement.lastElementChild.remove();
+		$(".Card-created").last().remove();
 
 		this.changeCreateBtnDisable();		
 	}
 
 	changeCreateBtnDisable() {
-		const CreateBtn = document.querySelector("#create-card");
-		if(CreateBtn.getAttribute("disabled") === "disabled") {
-			CreateBtn.removeAttribute("disabled");
-		}
+		$("#create-card").attr("disabled", false);
 	}
 
 	render() {
@@ -291,7 +281,7 @@ class CardEdititor extends Component {
 						</button>
 					</OverlayTrigger>
 				
-					<textarea className="Cards-textarea" placeholder="일정을 입력해주세요!" onKeyDown={this.resizeCardEditor} defaultValue={this.props.value} onChange={this.handleChange}></textarea>
+					<textarea className="Cards-textarea" placeholder="일정을 입력해주세요!" defaultValue={this.props.value} onChange={this.handleChange}></textarea>
 				</div>
 
 				:

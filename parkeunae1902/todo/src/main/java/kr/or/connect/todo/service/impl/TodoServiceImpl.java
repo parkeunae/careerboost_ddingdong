@@ -1,7 +1,7 @@
 package kr.or.connect.todo.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -38,12 +38,11 @@ public class TodoServiceImpl implements TodoService {
   @Override
   @Transactional
   public Todo setTodo(Todo todo) {
-    Date currentDate = new Date();
-    SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    String stringDate = transFormat.format(currentDate);
-
+    LocalDateTime currentDate = LocalDateTime.now();
+    String formattedCurrentDate = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		
     todo.setType("todo");
-    todo.setCreateDate(stringDate);
+    todo.setCreateDate(formattedCurrentDate);
 
     return mongoTemplate.insert(todo);
   }

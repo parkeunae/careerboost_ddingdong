@@ -1,0 +1,32 @@
+.Cards-dropdown {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: -3%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  z-index:2;
+}
+
+.Cards-dropdown label {
+  cursor: pointer;
+}
+
+.Cards-dropdown label span {
+  visibility: hidden;
+}
+
+.Cards-dropdown input[type="checkbox"] {
+  height: 1px;
+  margin: -1px;
+  position: absolute;
+  left: 0%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+}
+
+
+
+
+

@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import $ from 'jquery';
 import {Cards} from './Contents';
-import './Checkbox.css';
+import './ChangeType.css';
 import { Dropdown } from 'react-bootstrap';
 
 //참고: https://codepen.io/dsabalete/pen/jAzLpA
-class Checkbox extends Component {
+class ChangeType extends Component {
 
   moveToDoing = (newType) => {
   axios.put('api/type', {
@@ -20,11 +20,10 @@ class Checkbox extends Component {
         return first.toUpperCase();
     })
 
-    const list = document.querySelector('#'+type+'-list-id');
-    const elementCreated = document.createElement('div');
-    list.appendChild(elementCreated);
+    const elementCreated = $("<div></div>");
+    $("#"+type+"-list-id").append(elementCreated);
 
-    ReactDOM.render(<Cards contents={data.contents} id={data.id} type={data.type} cssclass={"Contents-Cards"} index={this.props.index}></Cards>, elementCreated);
+    ReactDOM.render(<Cards contents={data.contents} id={data.id} type={data.type} cssclass={"Contents-Cards"} index={this.props.index}></Cards>, elementCreated.get(0));
     
     if($('#'+this.props.index+'card').parent().is('.Contents-Cards') === true) {
       $('#'+this.props.index+'card').parent().remove();
@@ -40,7 +39,7 @@ class Checkbox extends Component {
 
 render() {
    return (
-     <div className="Cards-checkbox">
+     <div className="Cards-dropdown">
        
       <Dropdown id={this.props.type+'Select'} >
         <Dropdown.Toggle variant="warning" id="dropdown-variants-warning">
@@ -61,4 +60,4 @@ render() {
   }
 }
 
-export default Checkbox;
+export default ChangeType;

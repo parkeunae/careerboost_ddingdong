@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import $ from 'jquery';
 import Contents, {CardEdititor} from './Contents';
 import './Mainpage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,17 +13,15 @@ class Header extends Component {
   }
 
   createCard = () => {
-    const todolist = document.querySelector('#Todo-list-id');
-    const elementCreated = document.createElement('div');
-    elementCreated.className = "Contents-Cards Card-created";
-    todolist.appendChild(elementCreated);
+    const elementCreated = $("<div></div>");
+    elementCreated.addClass("Contents-Cards Card-created");
     
-    ReactDOM.render(<CardEdititor></CardEdititor>, elementCreated);
+    $("#Todo-list-id").append(elementCreated);
+    
+    ReactDOM.render(<CardEdititor></CardEdititor>, elementCreated.get(0));
+    
+    $("#create-card").attr("disabled", true);
 
-    const CreateBtn = document.querySelector("#create-card");
-    CreateBtn.setAttribute("disabled", "disabled");
-
-    return elementCreated;
   }
 
 	render() {
