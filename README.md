@@ -20,12 +20,12 @@
 * 화면
 ![Todolist 화면](./image/todolist.png)
 * 기능
->1) Todo 추가
->2) Todo 수정 (Todo인 카드만 수정 가능)
->3) Todo 삭제 (Doing, Done 상태의 카드도 삭제 가능)
->4) Todo -> Doing, Doing -> Done 상태 변경
+ 1. Todo 추가
+ 2. Todo 수정 (Todo인 카드만 수정 가능)
+ 3. Todo 삭제 (Doing, Done 상태의 카드도 삭제 가능)
+ 4. Todo -> Doing, Doing -> Done 상태 변경
 * 시연 영상
-[시연 영상 바로가기](https://youtu.be/AQKSSh_mrLc)
+>[시연 영상 바로가기](https://youtu.be/AQKSSh_mrLc)
 
 ### 가이드 및 유의사항
 >1) [부스트코스 에이스 2019: 커리어 부스팅 프로그램 전체 가이드 확인하기](https://docs.google.com/document/d/1-5fw6y2RopqAzfEsQJXjaKib63_7fuqeIdq-ulFzTP8/edit?usp=sharing) <br>
